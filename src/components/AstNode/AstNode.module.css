@@ -22,6 +22,10 @@
         }
     }
 
+    .attName {
+        font-family: sans-serif;
+    }
+
     .attValue {
         font-family: monospace;
     }
