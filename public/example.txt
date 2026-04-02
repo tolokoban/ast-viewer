@@ -1,0 +1,83 @@
+import { useCallback, useRef, useState } from "react";
+
+import { useHighlighter } from "./hooks/highlighter";
+import { useAst } from "./hooks/ast";
+
+import * as styles from "./App.module.css";
+
+/**
+ * Here is the default content to display **before**
+ * the user upload any `file`.
+ */
+const DEFAULT_CODE = `const greet = (name: string): string => {
+  return \`Hello, \${name}!\`;
+};
+
+greet("World");
+`;
+
+export function App() {
+  const [code, setCode] = useState(DEFAULT_CODE);
+  const highlighter = useHighlighter();
+  const ast = useAst(code);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
+
+  const handleUpload = useCallback(() => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".ts,.tsx";
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      file.text().then(setCode);
+    };
+    input.click();
+  }, []);
+
+  const handleScroll = () => {
+    if (textareaRef.current && highlightRef.current) {
+      highlightRef.current.scrollTop = textareaRef.current.scrollTop;
+      highlightRef.current.scrollLeft = textareaRef.current.scrollLeft;
+    }
+  };
+
+  const highlighted = highlighter
+    ? highlighter.codeToHtml(code, { lang: "tsx", theme: "catppuccin-mocha" })
+    : `<pre style="color:#cdd6f4">${escapeHtml(code)}</pre>`;
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.left}>
+        <div className={styles.header}>
+          <h1>AST Viewer</h1>
+          <button className={styles.uploadBtn} onClick={handleUpload}>
+            Upload .ts / .tsx
+          </button>
+        </div>
+        <div className={styles.editorWrap}>
+          <div
+            ref={highlightRef}
+            className={styles.highlight}
+            dangerouslySetInnerHTML={{ __html: highlighted }}
+          />
+          <textarea
+            ref={textareaRef}
+            className={styles.editor}
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            onScroll={handleScroll}
+            spellCheck={false}
+          />
+        </div>
+      </div>
+      <div className={styles.right}>
+        <pre>{ast || "Parsing..."}</pre>
+      </div>
+    </div>
+  );
+}
+
+function escapeHtml(s: string) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}

@@ -1,0 +1,30 @@
+{
+    "name": "ast-viewer",
+    "version": "1.0.0",
+    "description": "View the AST of a Typescript file",
+    "private": true,
+    "port": 9420,
+    "scripts": {
+        "start": "rspack serve",
+        "build": "rspack build",
+        "deploy": "npm run build && gh-pages -d dist"
+    },
+    "dependencies": {
+        "@oxc-parser/binding-wasm32-wasi": "^0.72.3",
+        "@tolokoban/type-guards": "^0.9.0",
+        "oxc-parser": "^0.72.1",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "shiki": "^3.4.2"
+    },
+    "devDependencies": {
+        "@rspack/cli": "^1.7.11",
+        "@rspack/core": "^1.7.11",
+        "@types/react": "^19.1.4",
+        "@types/react-dom": "^19.1.5",
+        "gh-pages": "^6.3.0",
+        "oxfmt": "^0.43.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    }
+}

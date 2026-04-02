@@ -1,0 +1,55 @@
+.astNode {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1em;
+
+    &::before {
+        content: "•";
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        width: 0;
+    }
+
+    &.inline {
+        display: inline-flex;
+
+        &::before {
+            display: none;
+        }
+    }
+
+    .attValue {
+        font-family: monospace;
+    }
+
+    .object {
+        opacity: .5;
+    }
+
+    .string {
+        color: #a6e3a1;
+    }
+
+    .number {
+        color: #fab387
+    }
+
+    .boolean {
+        color: #fab387
+    }
+
+    .null {
+        color: #ff82a5;
+        opacity: 1;
+    }
+}
+
+details.details {
+    >div {
+        margin-left: 1em;
+    }
+}

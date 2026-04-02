@@ -1,0 +1,14 @@
+.uploadButton {
+    padding: 6px 14px;
+    border: 1px solid #89b4fa;
+    background: transparent;
+    color: #89b4fa;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .2s;
+
+    &:hover {
+        background: #89b4fa;
+        color: #1e1e2e;
+    }
+}
