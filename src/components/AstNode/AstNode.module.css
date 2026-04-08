@@ -53,6 +53,22 @@
 }
 
 details.details {
+    >summary {
+        display: inline-block;
+    }
+
+    >summary::before {
+        content: "▸";
+        display: inline-block;
+        width: 1em;
+        transition: .2s all;
+    }
+
+    &[open]>summary::before {
+        transform: rotate(90deg);
+        transform-origin: 25% 50%;
+    }
+
     >div {
         margin-left: 1em;
     }

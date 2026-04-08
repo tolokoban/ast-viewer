@@ -1,6 +1,6 @@
 # ast-viewer
 
-View the AST of a Typescript file.
+View the AST of a Typescript file. [See it in action](https://tolokoban.github.io/ast-viewer).
 
 ## Description
 

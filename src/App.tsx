@@ -12,17 +12,18 @@ import React from "react";
 
 export function App() {
   const [selection, setSelection] = React.useState<[start: number, end: number]>([0, 0]);
+  const [scrolled, setScrolled] = React.useState(false);
   const [code, setCode] = useCode();
   const ast = useAst(code);
 
   return (
     <div className={styles.container}>
       <div className={styles.left}>
-        <div className={styles.header}>
+        <div className={`${styles.header} ${scrolled ? styles.headerShadow : ""}`}>
           <h1>AST Viewer</h1>
           <UploadButton onLoad={setCode} />
         </div>
-        <CodeEditor value={code} onChange={setCode} selection={selection} />
+        <CodeEditor value={code} onChange={setCode} selection={selection} onScroll={(top) => setScrolled(top > 0)} />
       </div>
       <div className={styles.right}>
         {!ast && <div>Parsing...</div>}

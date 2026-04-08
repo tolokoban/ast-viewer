@@ -10,18 +10,26 @@ export interface CodeEditorProps {
   value: string;
   selection: [start: number, end: number];
   onChange(value: string): void;
+  onScroll?(scrollTop: number): void;
 }
 
-export default function CodeEditor({ className, selection, value, onChange }: CodeEditorProps) {
+export default function CodeEditor({
+  className,
+  selection,
+  value,
+  onChange,
+  onScroll,
+}: CodeEditorProps) {
   const highlighter = useHighlighter();
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const highlightRef = React.useRef<HTMLDivElement>(null);
   const selectionRef = React.useRef<HTMLDivElement>(null);
   const handleScroll = () => {
-    const { current: ta } = textareaRef;
-    if (!ta) return;
-    const top = ta.scrollTop;
-    const left = ta.scrollLeft;
+    const { current: textarea } = textareaRef;
+    if (!textarea) return;
+
+    const top = textarea.scrollTop;
+    const left = textarea.scrollLeft;
     if (highlightRef.current) {
       highlightRef.current.scrollTop = top;
       highlightRef.current.scrollLeft = left;
@@ -30,6 +38,7 @@ export default function CodeEditor({ className, selection, value, onChange }: Co
       selectionRef.current.scrollTop = top;
       selectionRef.current.scrollLeft = left;
     }
+    onScroll?.(top);
   };
   const highlighted = highlighter
     ? highlighter.codeToHtml(value, { lang: "tsx", theme: "catppuccin-mocha" })
@@ -42,6 +51,9 @@ export default function CodeEditor({ className, selection, value, onChange }: Co
       : "";
 
   React.useEffect(() => {
+    /**
+     * Try to scroll the selection into view.
+     */
     const mark = selectionRef.current?.querySelector("mark");
     if (!mark || !textareaRef.current) return;
     const container = textareaRef.current;
@@ -52,7 +64,8 @@ export default function CodeEditor({ className, selection, value, onChange }: Co
       markRect.bottom <= containerRect.bottom &&
       markRect.left >= containerRect.left &&
       markRect.right <= containerRect.right
-    ) return;
+    )
+      return;
     const scrollTop = container.scrollTop + markRect.top - containerRect.top;
     const scrollLeft = container.scrollLeft + markRect.left - containerRect.left;
     container.scrollTop = scrollTop;
